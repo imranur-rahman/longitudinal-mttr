@@ -1,0 +1,14 @@
+pandas
+matplotlib
+seaborn
+scipy
+pymannkendall
+pyhomogeneity
+statsmodels
+
+# data collection pipeline (code/collect/)
+aiohttp
+google-cloud-bigquery
+google-cloud-bigquery-storage
+pyarrow
+rate-limit-safe-token-allocator

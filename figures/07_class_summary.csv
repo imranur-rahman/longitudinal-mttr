@@ -1,0 +1,6 @@
+cls,n,pct,median_n_releases,median_mttr,q25_mttr,q75_mttr,median_slope
+Improving,2354,39.65,34.0,28.07,14.17,53.77,-0.6626
+Worsening,1490,25.1,26.0,18.61,8.21,37.95,0.5124
+Stable-Low,1341,22.59,12.0,16.74,7.54,26.61,0.0
+Stable-High,595,10.02,10.0,68.35,50.56,103.35,0.0
+Stable-Variable,157,2.64,5.0,17.38,11.18,25.04,0.0
