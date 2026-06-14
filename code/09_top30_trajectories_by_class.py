@@ -20,7 +20,7 @@ TOP_N = 30
 NCOLS = 5
 NROWS = 6  # 6 × 5 = 30
 
-NPM_PATH  = "data/npm/package_data_npm_only_depsdev_per_release_results.csv"
+NPM_PATH  = "data/npm/npm_data_depsdev_per_release_results.csv"
 PYPI_PATH = "data/pypi/pypi_data_depsdev_per_release_results.csv"
 
 CLASS_ORDER = ["improving", "worsening", "stable_low", "stable_high", "stable_variable"]

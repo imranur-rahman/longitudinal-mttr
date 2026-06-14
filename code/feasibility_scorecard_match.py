@@ -78,7 +78,7 @@ scorecard = pd.read_csv(
     low_memory=False,
 )
 npm_full = pd.read_csv(
-    DATA_DIR / "npm" / "package_data_npm_only_depsdev_per_release_results.csv",
+    DATA_DIR / "npm" / "npm_data_depsdev_per_release_results.csv",
     low_memory=False,
 )
 pypi_full = pd.read_csv(
