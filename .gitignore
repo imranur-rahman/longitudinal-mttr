@@ -8,5 +8,6 @@ data/pypi/*
 data/dependency_update_tool/*
 data/scorecard_with_longitudinal_metrics.csv
 data/did_analysis/panel.csv
+data/dose_response/data.csv
 *.pyc
 .DS_Store
