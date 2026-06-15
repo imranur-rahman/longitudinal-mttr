@@ -6,4 +6,7 @@ data/collected/*
 data/npm/*
 data/pypi/*
 data/dependency_update_tool/*
+data/scorecard_with_longitudinal_metrics.csv
+data/did_analysis/panel.csv
 *.pyc
+.DS_Store

@@ -5,10 +5,13 @@ scipy
 pymannkendall
 pyhomogeneity
 statsmodels
+differences
+linearmodels
 
 # data collection pipeline (code/collect/)
 aiohttp
 google-cloud-bigquery
 google-cloud-bigquery-storage
 pyarrow
+db-dtypes
 rate-limit-safe-token-allocator
