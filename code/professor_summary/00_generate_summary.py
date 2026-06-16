@@ -280,38 +280,38 @@ plt.close(fig)
 print("  saved fig5_mttr_by_severity.png")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Fig 6 — Violin plot of MTTR values (nonzero only) by severity + ecosystem
+# Fig 6 — Horizontal violin plot of mttr_all_severities (nonzero, raw values)
+#          split by ecosystem
 # ═══════════════════════════════════════════════════════════════════════════════
 print("Fig 6: MTTR violin plot …")
 
 import seaborn as sns
 
-sev_order = ["mttr_critical", "mttr_high", "mttr_medium", "mttr_low", "mttr_all_severities"]
-sev_labels_short = ["Critical", "High", "Medium", "Low", "All severities"]
+CLIP_DAYS = 20   # p99 ≈ 19.7 days; clip display here, annotate outliers
 
-violin_rows = []
-for col, label in zip(sev_order, sev_labels_short):
-    sub = df[df[col] > 0][["ecosystem", col]].copy()
-    sub["severity"] = label
-    sub["log_mttr"] = np.log10(sub[col])
-    violin_rows.append(sub[["ecosystem", "severity", "log_mttr"]])
-vdf = pd.concat(violin_rows, ignore_index=True)
+vdf = df[df["mttr_all_severities"] > 0][["ecosystem", "mttr_all_severities"]].copy()
+n_clipped = int((vdf["mttr_all_severities"] > CLIP_DAYS).sum())
+pct_clipped = n_clipped / len(vdf) * 100
 
-fig, ax = plt.subplots(figsize=(13, 6))
+fig, ax = plt.subplots(figsize=(10, 5))
 sns.violinplot(
-    data=vdf, x="severity", y="log_mttr", hue="ecosystem",
-    order=sev_labels_short, split=True, inner="quartile",
+    data=vdf, x="mttr_all_severities", y="ecosystem",
+    order=["npm", "pypi"],
     palette={"npm": "#1f77b4", "pypi": "#ff7f0e"},
-    ax=ax, cut=0, linewidth=0.8,
+    inner="quartile", cut=0, linewidth=0.9,
+    ax=ax,
 )
-yticks = [-2, -1, 0, 1, 2]
-ax.set_yticks(yticks)
-ax.set_yticklabels([f"{10**t:.2g} d" for t in yticks])
-ax.set_xlabel("Vulnerability severity")
-ax.set_ylabel("MTTR (days, log₁₀ scale)\n[non-zero values only]")
-ax.set_title("MTTR distribution by severity and ecosystem\n(non-zero values; split violin: npm vs. PyPI)")
-ax.legend(title="Ecosystem", loc="upper right")
-ax.axhline(0, color="gray", linestyle="--", linewidth=0.8, alpha=0.6)
+ax.set_xlim(0, CLIP_DAYS)
+ax.set_xlabel("MTTR — all severities (days, raw values)\n[non-zero values only]")
+ax.set_ylabel("Ecosystem")
+ax.set_title(
+    "Distribution of MTTR (mttr_all_severities) by ecosystem\n"
+    f"(non-zero values; display clipped at {CLIP_DAYS} days — "
+    f"{n_clipped:,} rows ({pct_clipped:.1f}%) beyond clip not shown)"
+)
+ax.axvline(vdf["mttr_all_severities"].median(), color="red", linestyle="--",
+           linewidth=1.5, label=f"Overall median = {vdf['mttr_all_severities'].median():.2f} d")
+ax.legend(loc="upper right")
 fig.tight_layout()
 fig.savefig(OUT_DIR / "fig6_mttr_violin.png", bbox_inches="tight")
 plt.close(fig)
