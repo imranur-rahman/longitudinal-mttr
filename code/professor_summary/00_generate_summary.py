@@ -366,31 +366,52 @@ checks and repo activity metrics at that point in time.
 
 ## Outcome: MTTR
 
-MTTR is measured in **days** for each package-version row:
-- **{n_zero:,} rows ({pct_zero:.0f}%) have MTTR = 0** (the package-version had no
-  open vulnerabilities in its window, or a fix appeared in the same release).
-- Among the {n_nonzero:,} non-zero rows: median = {nonzero_med:.2f} days,
-  p75 = {nonzero_p75:.2f} days, max = {nonzero_max:.1f} days.
-- The distribution is **heavily zero-inflated and right-skewed** (see Fig. 1).
-- Separate MTTR values are available by severity (critical, high, medium, low);
-  medians range from 0.27 days (low severity) to 0.51 days (medium severity)
-  among non-zero observations.
+**MTTR (Mean Time to Remediate)** measures how fast a package updates its vulnerable
+dependencies over the package's lifetime. For each package version, MTTR is the
+number of **days** between the release of that version and the first subsequent
+release in which all known vulnerable dependencies were resolved (updated or removed).
 
-## Exposures / Treatments
+- **MTTR = 0.0** means the package version never had any vulnerable dependencies in
+  its observation window — either no known vulnerabilities affected its dependencies,
+  or the fix was already included in the same release. These are *not* "fast
+  remediators"; they are packages that were not exposed.
+- **MTTR > 0** means the package had at least one vulnerable dependency at release
+  time and took MTTR days to ship a fix. Among the {n_nonzero:,} such rows:
+  median = {nonzero_med:.2f} days, p75 = {nonzero_p75:.2f} days, max = {nonzero_max:.1f} days.
+- Even within the sample filtered to *packages with any version MTTR > 0*, **{n_zero:,}
+  individual version rows ({pct_zero:.0f}%) still have MTTR = 0** — because not every
+  version of an affected package coincided with an open vulnerability window.
+- The distribution is **heavily zero-inflated and right-skewed** (see Figs. 1 & 6).
+- Separate MTTR values are available by vulnerability severity (critical, high, medium,
+  low); medians among non-zero rows range from 0.27 days (low) to 0.51 days (medium).
 
-**Binary (staggered over time):**
-- `sca_used`: whether the repo's Scorecard `Dependency-Update-Tool` check passes
-  (score = 10), indicating use of an automated dependency-update tool (e.g.,
-  Dependabot, Renovate). Derived from the Scorecard score: 1 if score = 10,
-  0 if score = 0, missing otherwise.
-- Cohort breakdown (matched repos): {n_never:,} never-treated, {n_always:,} always-treated,
-  {n_switchers:,} switchers (adopt during observation window), unusable (score always missing).
+## Independent Variables
 
-**Continuous (8 variables):**
-num_dependencies, num_pinned_deps, num_floating_deps, release_frequency (days/release),
-GitHub stars, forks, commits (approx.), and maintainers (approx. contributor count).
-All are available at the package-version level (time-varying). Pins/floats/release
-frequency are ~80% complete; the rest are 99–100% complete.
+### Binary treatment: SCA tool adoption (`sca_used`)
+Derived from the OpenSSF Scorecard `Dependency-Update-Tool` check (score 0–10):
+`sca_used = 1` if score = 10 (tool detected, e.g. Dependabot or Renovate),
+`sca_used = 0` if score = 0 (no tool detected), missing if score = −1 or NaN.
+Cohort breakdown (matched repos, mttr>0 packages): {n_never:,} never-treated,
+{n_always:,} always-treated, {n_switchers:,} switchers (adopt during the window),
+3 unusable (always missing score).
+
+### Continuous variables (8)
+
+| Variable | Description | Scale | Completeness |
+|---|---|---|---|
+| `num_dependencies` | Total number of direct dependencies declared by the package version | Count | 100% |
+| `num_pinned_deps` | Number of dependencies pinned to an exact version (reduces supply-chain drift) | Count | ~80% |
+| `num_floating_deps` | Number of dependencies with a version range / unpinned (e.g. `^1.2.0`) | Count | ~80% |
+| `release_frequency` | Average days between consecutive releases for this repo at time of this version | Days/release | ~80% |
+| `stars` | GitHub repository star count at time of Scorecard run | Count | 100% |
+| `forks` | GitHub repository fork count | Count | 100% |
+| `commits` | Approximate total commit count for the repository | Count | 100% |
+| `maintainers` | Approximate number of unique contributors to the repository | Count | 100% |
+
+All 8 are **time-varying** (measured at each package version's release), making them
+covariates in a longitudinal/panel setting rather than static repo attributes.
+Highly right-skewed variables (all except `release_frequency`) were log₁₀(1+x)
+transformed for the GPS dose-response analysis.
 
 ## Panel Structure
 
