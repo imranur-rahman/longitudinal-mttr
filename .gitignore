@@ -9,5 +9,7 @@ data/dependency_update_tool/*
 data/scorecard_with_longitudinal_metrics.csv
 data/did_analysis/panel.csv
 data/dose_response/data.csv
+data/analysis_dataset.csv
+data/analysis_dataset_columns.csv
 *.pyc
 .DS_Store
