@@ -5,7 +5,7 @@
 Does adopting a Software Composition Analysis (SCA) / dependency-update tool reduce
 the **Mean Time to Remediate (MTTR)** known vulnerabilities in open-source packages?
 More broadly: which repository and package characteristics — dependency structure,
-release cadence, popularity, team size — are causally associated with faster
+release frequency, popularity, team size — are causally associated with faster
 vulnerability remediation?
 
 ## Data
@@ -30,15 +30,13 @@ checks and repo activity metrics at that point in time.
 ## Outcome: MTTR
 
 **MTTR (Mean Time to Remediate)** measures how fast a package updates its vulnerable
-dependencies over the package's lifetime. For each package version, MTTR is the
-number of **days** between the release of that version and the first subsequent
-release in which all known vulnerable dependencies were resolved (updated or removed).
+dependencies over the package's lifetime. In other words, **MTTR** measures the responsiveness of the development teams of the packages in keeping their dependencies updated to fixed version.
 
 - **MTTR = 0.0** means the package version never had any vulnerable dependencies in
   its observation window — either no known vulnerabilities affected its dependencies,
   or the fix was already included in the same release. These are *not* "fast
   remediators"; they are packages that were not exposed.
-- **MTTR > 0** means the package had at least one vulnerable dependency at release
+- **MTTR > 0.0** means the package had at least one vulnerable dependency at release
   time and took MTTR days to ship a fix. Among the 52,656 such rows:
   median = 0.43 days, p75 = 1.58 days, max = 253.8 days.
 - Even within the sample filtered to *packages with any version MTTR > 0*, **18,297
@@ -78,7 +76,7 @@ transformed for the GPS dose-response analysis.
 
 ## Panel Structure
 
-Observations are **repeated per (ecosystem, GitHub repo)**: each repo contributes
+Observations are **repeated per (ecosystem, package)**: each package contributes
 a median of 10 rows (p75 = 26, max = 1,624), one per version release.
 
 **Key challenge:** release timing is irregular (some repos release weekly, others
@@ -144,3 +142,4 @@ considering applying PPML in place of OLS in both the panel FE and GPS outcome s
 5. **Effect size interpretability**: ATT ≈ 0.55 days and panel-FE β < 0.001 per
    unit — are these effect sizes practically negligible, or could they be masked by
    OLS mis-specification on a zero-inflated, right-skewed outcome?
+6. What assumptions should we care for?
