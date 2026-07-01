@@ -1,0 +1,38 @@
+                            WLS Regression Results                            
+==============================================================================
+Dep. Variable:         Q('mttr_days')   R-squared:                       0.047
+Model:                            WLS   Adj. R-squared:                  0.047
+Method:                 Least Squares   F-statistic:                     258.2
+Date:                Wed, 01 Jul 2026   Prob (F-statistic):               0.00
+Time:                        13:02:52   Log-Likelihood:            -1.3716e+05
+No. Observations:               42975   AIC:                         2.743e+05
+Df Residuals:                   42962   BIC:                         2.745e+05
+Df Model:                          12                                         
+Covariance Type:                  HC3                                         
+==================================================================================================
+                                     coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------
+Intercept                          3.3316      0.146     22.777      0.000       3.045       3.618
+Q('treat')                         0.0886      0.060      1.483      0.138      -0.028       0.206
+Q('num_direct_dependencies')      -0.0384      0.001    -26.518      0.000      -0.041      -0.036
+Q('num_pinned_dependencies')       0.0110      0.001      7.492      0.000       0.008       0.014
+Q('num_floating_dependencies')    -0.0038      0.000     -8.955      0.000      -0.005      -0.003
+Q('total_version_releases')    -3.949e-05   4.55e-05     -0.869      0.385      -0.000    4.96e-05
+Q('release_frequency_days')       -0.0022   7.25e-05    -29.764      0.000      -0.002      -0.002
+Q('github_stars')              -4.489e-05   3.25e-06    -13.806      0.000   -5.13e-05   -3.85e-05
+Q('github_forks')                  0.0002   1.36e-05     11.185      0.000       0.000       0.000
+Q('github_commits')            -2.207e-05    3.6e-06     -6.130      0.000   -2.91e-05    -1.5e-05
+Q('github_maintainers')           -0.0086      0.001    -10.062      0.000      -0.010      -0.007
+Q('scorecard_overall_score')      -0.0521      0.024     -2.161      0.031      -0.099      -0.005
+Q('ecosystem_pypi')                0.0810      0.060      1.352      0.177      -0.036       0.198
+==============================================================================
+Omnibus:                    88724.439   Durbin-Watson:                   0.775
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):        547243037.275
+Skew:                          17.352   Prob(JB):                         0.00
+Kurtosis:                     554.735   Cond. No.                     4.45e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+[2] The condition number is large, 4.45e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
